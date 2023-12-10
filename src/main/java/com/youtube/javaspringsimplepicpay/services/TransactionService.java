@@ -3,7 +3,7 @@ package com.youtube.javaspringsimplepicpay.services;
 import com.youtube.javaspringsimplepicpay.domain.transaction.Transaction;
 import com.youtube.javaspringsimplepicpay.domain.user.User;
 import com.youtube.javaspringsimplepicpay.dtos.TransactionDTO;
-import com.youtube.javaspringsimplepicpay.repositories.UserRepository;
+import com.youtube.javaspringsimplepicpay.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class TransactionService {
     private UserService userService;
 
     @Autowired
-    private UserRepository repository;
+    private TransactionRepository repository;
 
     @Autowired
     private RestTemplate restTemplate;
