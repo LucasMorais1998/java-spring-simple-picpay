@@ -2,6 +2,7 @@ package com.youtube.javaspringsimplepicpay.services;
 
 import com.youtube.javaspringsimplepicpay.domain.user.User;
 import com.youtube.javaspringsimplepicpay.domain.user.UserType;
+import com.youtube.javaspringsimplepicpay.dtos.UserDTO;
 import com.youtube.javaspringsimplepicpay.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,13 @@ public class UserService {
 
     public User findUserById(Long id) throws Exception {
         return  this.repository.findUserById(id).orElseThrow(() -> new Exception("Usuário não encontrado"));
+    }
+
+    public User createUser(UserDTO data) {
+        User newUser = new User(data);
+        this.saveUser(newUser);
+
+        return newUser;
     }
 
     public void saveUser(User user) {
