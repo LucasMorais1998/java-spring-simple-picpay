@@ -4,6 +4,7 @@ import com.youtube.javaspringsimplepicpay.domain.user.User;
 import com.youtube.javaspringsimplepicpay.domain.user.UserType;
 import com.youtube.javaspringsimplepicpay.dtos.TransactionDTO;
 import com.youtube.javaspringsimplepicpay.repositories.TransactionRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -86,5 +87,42 @@ class TransactionServiceTest {
         verify(notificationService, times(1))
                 .sendNotification(receiver, "Transação recebida com sucesso");
 
+    }
+
+    @Test
+    @DisplayName("Should throw Exception when Transaction is not allowed")
+    void throwExceptionWhenTransactionNotAllowed() throws Exception {
+        User sender = new User(
+                1L,
+                "John",
+                "Doe",
+                "99999999901",
+                "john_doe@email.com",
+                "password",
+                new BigDecimal(10),
+                UserType.COMMON);
+
+        User receiver = new User(
+                2L,
+                "Jane",
+                "Doe",
+                "99999999902",
+                "jane_doe@email.com",
+                "password",
+                new BigDecimal(10),
+                UserType.COMMON);
+
+        when(userService.findUserById(1L)).thenReturn(sender);
+        when(userService.findUserById(2L)).thenReturn(receiver);
+
+        when(authService.authorizeTransaction(any(), any())).thenReturn(false);
+
+        Exception thrown = Assertions.assertThrows(Exception.class, () -> {
+            TransactionDTO request = new TransactionDTO(new BigDecimal(10), 1L, 2L);
+
+            transactionService.createTransaction(request);
+        });
+
+        Assertions.assertEquals("Transação não autorizada", thrown.getMessage());
     }
 }
